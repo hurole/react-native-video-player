@@ -77,6 +77,7 @@ export interface VideoPlayerProps extends ReactVideoProps {
   onProgress?: (event: OnProgressData) => void;
   onShowControls?: () => void;
   onStart?: () => void;
+  onFullScreenChange?: (state: boolean) => void;
   pauseOnPress?: boolean;
   paused?: boolean;
   resizeMode?: ResizeMode;
@@ -97,6 +98,7 @@ const VideoPlayer = forwardRef<VideoPlayerRef, VideoPlayerProps>(
       endWithThumbnail,
       onStart,
       onEnd,
+      onFullScreenChange,
       style,
       thumbnail,
       videoHeight = 1080,
@@ -186,6 +188,7 @@ const VideoPlayer = forwardRef<VideoPlayerRef, VideoPlayerProps>(
           autoplay={autoplay}
           onEnd={_onEnd}
           sizeStyle={sizeStyles}
+          onFullScreenChange={onFullScreenChange}
         />
       );
     }, [

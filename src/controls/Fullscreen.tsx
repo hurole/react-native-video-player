@@ -5,6 +5,7 @@ import { Image, StyleSheet, TouchableOpacity } from 'react-native';
 interface FullscreenProps {
   controlButtonCustomStyles: CustomStyles['controlButton'];
   controlIconCustomStyles: CustomStyles['controlIcon'];
+  isFullScreen: boolean;
   onToggleFullScreen: () => void;
 }
 
@@ -13,16 +14,24 @@ export const Fullscreen = memo(
     onToggleFullScreen,
     controlIconCustomStyles,
     controlButtonCustomStyles,
+    isFullScreen,
   }: FullscreenProps) => {
     return (
       <TouchableOpacity
         onPress={onToggleFullScreen}
         style={[styles.extraControl, controlButtonCustomStyles]}
       >
-        <Image
-          style={controlIconCustomStyles}
-          source={require('../img/fullscreen.png')}
-        />
+        {isFullScreen ? (
+          <Image
+            style={controlIconCustomStyles}
+            source={require('../img/fullscreen-off.png')}
+          />
+        ) : (
+          <Image
+            style={controlIconCustomStyles}
+            source={require('../img/fullscreen.png')}
+          />
+        )}
       </TouchableOpacity>
     );
   }

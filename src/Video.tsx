@@ -51,7 +51,10 @@ type RenderVideoProps = Pick<
   | 'showDuration'
   | 'source'
   | 'style'
-> & { sizeStyle: { width: number; height: number } };
+> & {
+  sizeStyle: { width: number; height: number };
+  onFullScreenChange?: (state: boolean) => void;
+};
 
 export const RenderVideo = memo(
   forwardRef<VideoInternalRef, RenderVideoProps>((props, ref) => {
@@ -75,6 +78,7 @@ export const RenderVideo = memo(
       onPlaybackStateChanged,
       onProgress,
       onShowControls,
+      onFullScreenChange,
       pauseOnPress,
       paused,
       repeat = false,
@@ -87,6 +91,7 @@ export const RenderVideo = memo(
 
     const [isPlaying, setIsPlaying] = useState(autoplay);
     const [isMuted, setIsMuted] = useState(defaultMuted ?? false);
+    const [isFullScreen, setIsFullScreen] = useState(false);
     const [isControlsVisible, setIsControlsVisible] = useState(false);
     const [duration, setDuration] = useState(0);
 
@@ -154,8 +159,10 @@ export const RenderVideo = memo(
     }, [onShowControls, isControlsVisible, _hideControls, setProgress]);
 
     useEffect(() => {
-      if (autoplay) _hideControls();
+      _showControls();
+    }, []);
 
+    useEffect(() => {
       return () => {
         if (controlsTimeoutRef.current) {
           clearTimeout(controlsTimeoutRef.current);
@@ -221,8 +228,22 @@ export const RenderVideo = memo(
     );
 
     const onToggleFullScreen = useCallback(() => {
+      if (isFullScreen) {
+        if (Platform.OS === 'ios') {
+          setIsFullScreen(false);
+          onFullScreenChange?.(false);
+          return;
+        }
+        videoRef.current?.dismissFullscreenPlayer();
+        return;
+      }
+      if (Platform.OS === 'ios') {
+        setIsFullScreen(true);
+        onFullScreenChange?.(true);
+        return;
+      }
       videoRef.current?.presentFullscreenPlayer();
-    }, []);
+    }, [isFullScreen, onFullScreenChange]);
 
     const seek = useCallback(
       (progress: number) => {
@@ -246,6 +267,14 @@ export const RenderVideo = memo(
           source={source}
           resizeMode={resizeMode}
           onPlaybackStateChanged={_onPlaybackStateChanged}
+          onFullscreenPlayerDidPresent={() => {
+            setIsFullScreen(true);
+            onFullScreenChange?.(true);
+          }}
+          onFullscreenPlayerDidDismiss={() => {
+            setIsFullScreen(false);
+            onFullScreenChange?.(false);
+          }}
         />
         <TouchableOpacity
           style={styles.overlayButton}
@@ -265,6 +294,7 @@ export const RenderVideo = memo(
           duration={props.duration || duration}
           isPlaying={isPlaying}
           isMuted={isMuted}
+          isFullScreen={isFullScreen}
           onPlayPress={_onPlayPress}
           onMutePress={_onMutePress}
           onToggleFullScreen={onToggleFullScreen}

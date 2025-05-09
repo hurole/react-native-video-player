@@ -15,6 +15,7 @@ interface ControlsProps
   animationDuration: number;
   duration: number;
   isPlaying: boolean;
+  isFullScreen: boolean;
   isMuted: boolean;
   onPlayPress: () => void;
   onMutePress: () => void;
@@ -38,6 +39,7 @@ export const Controls = forwardRef<ProgressRef, ControlsProps>(
       disableFullscreen,
       onMutePress,
       isMuted,
+      isFullScreen,
       animationDuration,
       controlsTimeoutId,
       isControlsVisible,
@@ -121,6 +123,7 @@ export const Controls = forwardRef<ProgressRef, ControlsProps>(
         />
         {!disableFullscreen && (
           <Fullscreen
+            isFullScreen={isFullScreen}
             onToggleFullScreen={onToggleFullScreen}
             controlButtonCustomStyles={customStyles?.controlButton}
             controlIconCustomStyles={customStyles?.controlIcon}
