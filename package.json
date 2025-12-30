@@ -1,10 +1,11 @@
 {
-  "name": "react-native-video-player",
-  "version": "0.16.3",
+  "name": "@fka/react-native-video-player",
+  "version": "0.16.4",
   "description": "A <VideoPlayer /> component for React Native with controls",
   "source": "./src/index.tsx",
   "main": "./lib/commonjs/index.js",
   "module": "./lib/module/index.js",
+  "types": "./lib/typescript/commonjs/src/index.d.ts",
   "exports": {
     ".": {
       "import": {

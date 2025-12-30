@@ -229,7 +229,7 @@ export const RenderVideo = memo(
 
     const onToggleFullScreen = useCallback(() => {
       if (isFullScreen) {
-        if (Platform.OS === 'ios') {
+        if (Platform.OS !== 'android') {
           setIsFullScreen(false);
           onFullScreenChange?.(false);
           return;
@@ -237,7 +237,7 @@ export const RenderVideo = memo(
         videoRef.current?.dismissFullscreenPlayer();
         return;
       }
-      if (Platform.OS === 'ios') {
+      if (Platform.OS !== 'android') {
         setIsFullScreen(true);
         onFullScreenChange?.(true);
         return;
